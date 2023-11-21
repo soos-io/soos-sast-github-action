@@ -1,0 +1,69 @@
+name: 'SOOS SAST'
+author: 'SOOS'
+description: 'The SOOS GitHub Action to perform SAST Analysis.'
+branding:
+  icon: "alert-triangle"
+  color: "blue"
+inputs:
+  api_key:
+    description: 'SOOS API Key.'
+    required: true
+  api_url:
+    description: 'SOOS API URL.'
+    required: true
+    default: 'https://api.soos.io/api/'
+  branch_name:
+    description: 'Branch Name to create scan under'
+    required: false
+    default: ''
+  branch_uri:
+    description: 'URI to branch from SCM system.'
+    required: false
+    default: ''
+  build_uri:
+    description: 'URI to CI build info.'
+    required: false
+    default: ''
+  build_version:
+    description: 'Version of application build artifacts.'
+    required: false
+    default: ''
+  client_id:
+    description: 'SOOS Client Id.'
+    required: true
+  log_level:
+    description: 'Log level to show: PASS, IGNORE, INFO, WARN, FAIL, DEBUG, ERROR.'
+    required: false
+    default: 'INFO'
+  operating_environment:
+    description: 'System info regarding operating system, etc.'
+    required: false
+    default: ${{ runner.os }}
+  project_name:
+    description: 'The project name that will be displayed on the dashboard. By Default is owner/repository_name.'
+    required: true
+    default: ${{ github.repository }}
+  sast_path:
+    description: "The SAST File to scan, it could be the location of the file or the file itself. When location is specified only the first file found will be scanned. When this parameter is specified it should be indicated relative to the repository (eg: sast/your_sast.sarif.json)"
+    required: true
+    default: ''
+  verbose: 
+    description: 'Enable verbose logging.'
+    required: false
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  env:
+    SOOS_API_KEY: ${{ inputs.api_key }}
+    SOOS_API_URL: ${{ inputs.api_url }}
+    SOOS_BRANCH_NAME: ${{ inputs.branch_name }}
+    SOOS_BRANCH_URI: ${{ inputs.branch_uri }}
+    SOOS_BUILD_URI: ${{ inputs.build_uri }}
+    SOOS_BUILD_VERSION: ${{ inputs.build_version }}
+    SOOS_CLIENT_ID: ${{ inputs.client_id }}
+    SOOS_LOG_LEVEL: ${{ inputs.log_level }}
+    SOOS_OPERATING_ENVIRONMENT: ${{ inputs.operating_environment }}
+    SOOS_OTHER_OPTIONS: ${{ inputs.other_options }}
+    SOOS_PROJECT_NAME: ${{ inputs.project_name }}
+    SOOS_SAST_PATH: ${{ inputs.sast_path }}
+    SOOS_VERBOSE: ${{ inputs.verbose }}
