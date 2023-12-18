@@ -31,10 +31,20 @@ inputs:
   client_id:
     description: 'SOOS Client Id.'
     required: true
+  directories_to_exclude:
+    description: 'Listing of directories or patterns to exclude from the search for SAST files. eg: **bin/start/**, **/start/**'
+    required: false
+  files_to_exclude:
+    description: 'Listing of files or patterns patterns to exclude from the search for SAST files. eg: **/sa**.sarif.json/, **/sast.sarif.json'
+    required: false
   log_level:
     description: 'Log level to show: PASS, IGNORE, INFO, WARN, FAIL, DEBUG, ERROR.'
     required: false
     default: 'INFO'
+  on_failure:
+    description: 'Set the On Failure Scan Strategy: fail_the_build, and continue_on_failure'
+    required: false
+    default: 'continue_on_failure'
   operating_environment:
     description: 'System info regarding operating system, etc.'
     required: false
@@ -43,9 +53,9 @@ inputs:
     description: 'The project name that will be displayed on the dashboard. By Default is owner/repository_name.'
     required: true
     default: ${{ github.repository }}
-  sast_path:
-    description: "The SAST File to scan, it could be the location of the file or the file itself. When location is specified only the first file found will be scanned. When this parameter is specified it should be indicated relative to the repository (eg: sast/your_sast.sarif.json)"
-    required: true
+  source_code_path:
+    description: "The path to start searching for SAST files."
+    required: false
     default: ''
   verbose: 
     description: 'Enable verbose logging.'
@@ -61,9 +71,12 @@ runs:
     SOOS_BUILD_URI: ${{ inputs.build_uri }}
     SOOS_BUILD_VERSION: ${{ inputs.build_version }}
     SOOS_CLIENT_ID: ${{ inputs.client_id }}
+    SOOS_DIRECTORIES_TO_EXCLUDE: ${{ inputs.directories_to_exclude }}
+    SOOS_FILES_TO_EXCLUDE: ${{ inputs.files_to_exclude }}
     SOOS_LOG_LEVEL: ${{ inputs.log_level }}
+    SOOS_ON_FAILURE: ${{ inputs.on_failure }}
     SOOS_OPERATING_ENVIRONMENT: ${{ inputs.operating_environment }}
     SOOS_OTHER_OPTIONS: ${{ inputs.other_options }}
     SOOS_PROJECT_NAME: ${{ inputs.project_name }}
-    SOOS_SAST_PATH: ${{ inputs.sast_path }}
+    SOOS_SOURCE_CODE_PATH: ${{ inputs.source_code_path }}
     SOOS_VERBOSE: ${{ inputs.verbose }}

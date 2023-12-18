@@ -7,9 +7,9 @@ SOOS_INTEGRATION_TYPE="Plugin"
 
 SOOS_BRANCH_NAME=${SOOS_BRANCH_NAME:-${GITHUB_REF}}
 if [[ -n $SOOS_SAST_PATH ]]; then
-    SOOS_SAST_PATH=${GITHUB_WORKSPACE}/${SOOS_SAST_PATH}
+    SOOS_SOURCE_CODE_PATH=${GITHUB_WORKSPACE}/${SOOS_SAST_PATH}
 else
-    SOOS_SAST_PATH=${GITHUB_WORKSPACE}
+    SOOS_SOURCE_CODE_PATH=${GITHUB_WORKSPACE}
 fi
 
 PARAMS=(
@@ -22,12 +22,17 @@ PARAMS=(
     ${SOOS_BUILD_VERSION:+--buildVersion ${SOOS_BUILD_VERSION}}
     "--clientId ${SOOS_CLIENT_ID}"
     "--commitHash ${GITHUB_SHA}"
+    "--directoriesToExclude" "${SOOS_DIRECTORIES_TO_EXCLUDE}"
+    "--filesToExclude" "${SOOS_FILES_TO_EXCLUDE}"
     "--integrationName ${SOOS_INTEGRATION_NAME}"
     "--integrationType ${SOOS_INTEGRATION_TYPE}"
+    ${SOOS_LOG_LEVEL:+--logLevel ${SOOS_LOG_LEVEL}}
+    "--onFailure" "${SOOS_ON_FAILURE}"
     "--projectName ${SOOS_PROJECT_NAME}"
+    "--sourceCodePath ${SOOS_SOURCE_CODE_PATH}"
     ${SOOS_VERBOSE:+--verbose}
 )
 
 PARAMS_STRING="${PARAMS[@]}"
 
-soos-sast "${SOOS_SAST_PATH}" ${PARAMS_STRING}
+soos-sast ${PARAMS_STRING}

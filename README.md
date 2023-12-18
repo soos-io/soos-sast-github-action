@@ -27,7 +27,7 @@ jobs:
           client_id: ${{ secrets.SOOS_CLIENT_ID }}
           api_key: ${{ secrets.SOOS_API_KEY }}
           project_name: "My Project Name"
-          sast_path: "SAST path relative to the repository or empty if it's on the root"
+          source_code_path: "The path to start searching for SAST files."
 
 ```
 
@@ -42,8 +42,11 @@ jobs:
 | build_uri              | [none]                       | URI to CI build info.                                                                                                        |
 | build_version          | [none]                       | Version of application build artifacts.                                                                                      |
 | client_id              | [none]                       | The Client Id provided to you when subscribing to SOOS services.                                                             |
+| directories_to_exclude  | Listing of directories or patterns to exclude from the search for SAST files. eg: **bin/start/**, **/start/** |  |
+| files_to_exclude        | LListing of files or patterns patterns to exclude from the search for SAST files. eg: **/sa**.sarif.json/, **/sast.sarif.json |  |
 | log_level              | 'INFO'                       | Log level to show: PASS, IGNORE, INFO, WARN, FAIL, DEBUG, ERROR.                                                                       |
+| on_failure              | Set the On Failure Scan Strategy: fail_the_build, and continue_on_failure | continue_on_failure |
 | operating_environment  | ${{ runner.os }}             | System info regarding operating system, etc.                                                                                 |
 | project_name           | ${{ github.repository }}     | The project name that will be displayed on the dashboard. By Default is owner/repository_name.                               |
-| sast_path           | [none]                       | The SAST File to scan, it could be the location of the file or the file itself. When location is specified only the first file found will be scanned. When this parameter is specified it should be indicated relative to the repository (eg: sast/your_sast.sarif.json)                          |
+| source_code_path           | GITHUB_WORKSPACE         | The path to start searching for SAST files.|
 | verbose                | [none]                       | Enable verbose logging.                                                                                                      |
