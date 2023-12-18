@@ -35,4 +35,5 @@ PARAMS=(
 
 PARAMS_STRING="${PARAMS[@]}"
 
+set -x
 soos-sast ${PARAMS_STRING}
