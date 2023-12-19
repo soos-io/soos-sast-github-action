@@ -35,18 +35,18 @@ jobs:
 
 | Property               | Default                      | Description                                                                                                                  |
 |------------------------|------------------------------|------------------------------------------------------------------------------------------------------------------------------|
-| api_key                | [none]                       | The Api Key provided to you when subscribing to SOOS services.                                                               |
-| api_url                | "https://api.soos.io/api/"   | The API BASE URI provided to you when subscribing to SOOS services.                                                          |
+| api_key                | [none]                       | The API Key provided to you when subscribing to SOOS services.                                                               |
+| api_url                | [none]                       | The API BASE URI provided to you when subscribing to SOOS services.  (Internal Use Only)                                     |
 | branch_name            | [none]                       | Branch Name to create scan under.                                                                                            |
 | branch_uri             | [none]                       | URI to branch from SCM system.                                                                                               |
 | build_uri              | [none]                       | URI to CI build info.                                                                                                        |
 | build_version          | [none]                       | Version of application build artifacts.                                                                                      |
 | client_id              | [none]                       | The Client Id provided to you when subscribing to SOOS services.                                                             |
-| directories_to_exclude  | Listing of directories or patterns to exclude from the search for SAST files. eg: **bin/start/**, **/start/** |  |
-| files_to_exclude        | LListing of files or patterns patterns to exclude from the search for SAST files. eg: **/sa**.sarif.json/, **/sast.sarif.json |  |
-| log_level              | 'INFO'                       | Log level to show: PASS, IGNORE, INFO, WARN, FAIL, DEBUG, ERROR.                                                                       |
-| on_failure              | Set the On Failure Scan Strategy: fail_the_build, and continue_on_failure | continue_on_failure |
+| directories_to_exclude | [none]                       | Listing of directories or patterns to exclude from the search for SAST files. eg: **bin/start/**, **/start/**                |
+| files_to_exclude       | [none]                       | Listing of files or patterns patterns to exclude from the search for SAST files. eg: **/sa**.sarif.json/, **/sast.sarif.json |
+| log_level              | 'INFO'                       | Log level to show: PASS, IGNORE, INFO, WARN, FAIL, DEBUG, ERROR.                                                             |
+| on_failure             | continue_on_failure          | Set the On Failure Scan Strategy: fail_the_build, and continue_on_failure                                                    |
 | operating_environment  | ${{ runner.os }}             | System info regarding operating system, etc.                                                                                 |
 | project_name           | ${{ github.repository }}     | The project name that will be displayed on the dashboard. By Default is owner/repository_name.                               |
-| source_code_path           | GITHUB_WORKSPACE         | The path to start searching for SAST files.|
+| source_code_path       | GITHUB_WORKSPACE             | The path to start searching for SAST files.                                                                                  |
 | verbose                | [none]                       | Enable verbose logging.                                                                                                      |
