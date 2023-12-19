@@ -22,8 +22,8 @@ PARAMS=(
     ${SOOS_BUILD_VERSION:+--buildVersion ${SOOS_BUILD_VERSION}}
     "--clientId ${SOOS_CLIENT_ID}"
     "--commitHash ${GITHUB_SHA}"
-    "--directoriesToExclude" "${SOOS_DIRECTORIES_TO_EXCLUDE}"
-    "--filesToExclude" "${SOOS_FILES_TO_EXCLUDE}"
+    ${SOOS_DIRECTORIES_TO_EXCLUDE:+--directoriesToExclude "${SOOS_DIRECTORIES_TO_EXCLUDE}"}
+    ${SOOS_FILES_TO_EXCLUDE:+--filesToExclude "${SOOS_FILES_TO_EXCLUDE}"}
     "--integrationName ${SOOS_INTEGRATION_NAME}"
     "--integrationType ${SOOS_INTEGRATION_TYPE}"
     ${SOOS_LOG_LEVEL:+--logLevel ${SOOS_LOG_LEVEL}}
@@ -33,7 +33,6 @@ PARAMS=(
     ${SOOS_VERBOSE:+--verbose}
 )
 
-PARAMS_STRING="${PARAMS[@]}"
 
 set -x
-soos-sast ${PARAMS_STRING}
+soos-sast "${PARAMS[@]}"
