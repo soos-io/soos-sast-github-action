@@ -33,6 +33,4 @@ PARAMS=(
     ${SOOS_VERBOSE:+--verbose}
 )
 
-
-set -x
 soos-sast "${PARAMS[@]}"
