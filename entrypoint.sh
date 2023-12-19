@@ -28,7 +28,7 @@ PARAMS=(
     "--integrationType ${SOOS_INTEGRATION_TYPE}"
     ${SOOS_LOG_LEVEL:+--logLevel ${SOOS_LOG_LEVEL}}
     "--onFailure" "${SOOS_ON_FAILURE}"
-    "--projectName ${SOOS_PROJECT_NAME}"
+    "--projectName" "${SOOS_PROJECT_NAME}"
     "--sourceCodePath ${SOOS_SOURCE_CODE_PATH}"
     ${SOOS_VERBOSE:+--verbose}
 )
