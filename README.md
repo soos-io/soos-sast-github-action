@@ -44,7 +44,7 @@ jobs:
 | client_id              | [none]                       | The Client Id provided to you when subscribing to SOOS services.                                                             |
 | directories_to_exclude | [none]                       | Listing of directories or patterns to exclude from the search for SAST files. eg: **bin/start/**, **/start/**                |
 | files_to_exclude       | [none]                       | Listing of files or patterns patterns to exclude from the search for SAST files. eg: **/sa**.sarif.json/, **/sast.sarif.json |
-| log_level              | 'INFO'                       | Log level to show: PASS, IGNORE, INFO, WARN, FAIL, DEBUG, ERROR.                                                             |
+| log_level              | 'INFO'                       | Log level to show: DEBUG, INFO, WARN, FAIL, ERROR.                                                                           |
 | on_failure             | continue_on_failure          | Set the On Failure Scan Strategy: fail_the_build, and continue_on_failure                                                    |
 | operating_environment  | ${{ runner.os }}             | System info regarding operating system, etc.                                                                                 |
 | project_name           | ${{ github.repository }}     | The project name that will be displayed on the dashboard. By Default is owner/repository_name.                               |
