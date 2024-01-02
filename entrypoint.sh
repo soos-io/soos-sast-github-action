@@ -30,7 +30,8 @@ PARAMS=(
     "--onFailure" "${SOOS_ON_FAILURE}"
     "--projectName" "${SOOS_PROJECT_NAME}"
     "--sourceCodePath" "${SOOS_SOURCE_CODE_PATH}"
-    ${SOOS_VERBOSE:+--verbose}
 )
+
+[ "$SOOS_VERBOSE" == "true" ] && PARAMS+=("--verbose")
 
 soos-sast "${PARAMS[@]}"
