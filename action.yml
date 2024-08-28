@@ -12,14 +12,14 @@ inputs:
     description: 'SOOS API URL.'
     required: true
     default: 'https://api.soos.io/api/'
-  branch_name:
-    description: 'Branch Name to create scan under'
-    required: false
-    default: ''
   branch_uri:
     description: 'URI to branch from SCM system.'
     required: false
-    default: ''
+    default: '${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}'
+  branch_name:
+    description: 'Branch Name to create scan under'
+    required: false
+    default: '${{ github.ref_name }}'
   build_uri:
     description: 'URI to CI build info.'
     required: false
@@ -38,7 +38,7 @@ inputs:
     description: 'Listing of files or patterns patterns to exclude from the search for SAST files. eg: **/sa**.sarif.json/, **/sast.sarif.json'
     required: false
   log_level:
-    description: 'Log level to show: PASS, IGNORE, INFO, WARN, FAIL, DEBUG, ERROR.'
+    description: 'Log level to show: DEBUG, INFO, WARN, FAIL, ERROR.'
     required: false
     default: 'INFO'
   on_failure:
@@ -53,30 +53,85 @@ inputs:
     description: 'The project name that will be displayed on the dashboard. By Default is owner/repository_name.'
     required: true
     default: ${{ github.repository }}
+  sast_version:
+    description: 'The SOOS SAST version to use - Internal Use Only'
+    required: false
+    default: 'latest'
   source_code_path:
     description: "The path to start searching for SAST files."
     required: false
     default: ''
-  verbose: 
-    description: 'Enable verbose logging.'
+  verbose:
+    description: 'DEPRECATED - parameter has no effect. Set log_level to DEBUG for the same effect.'
     required: false
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
-  env:
-    SOOS_API_KEY: ${{ inputs.api_key }}
-    SOOS_API_URL: ${{ inputs.api_url }}
-    SOOS_BRANCH_NAME: ${{ inputs.branch_name }}
-    SOOS_BRANCH_URI: ${{ inputs.branch_uri }}
-    SOOS_BUILD_URI: ${{ inputs.build_uri }}
-    SOOS_BUILD_VERSION: ${{ inputs.build_version }}
-    SOOS_CLIENT_ID: ${{ inputs.client_id }}
-    SOOS_DIRECTORIES_TO_EXCLUDE: ${{ inputs.directories_to_exclude }}
-    SOOS_FILES_TO_EXCLUDE: ${{ inputs.files_to_exclude }}
-    SOOS_LOG_LEVEL: ${{ inputs.log_level }}
-    SOOS_ON_FAILURE: ${{ inputs.on_failure }}
-    SOOS_OPERATING_ENVIRONMENT: ${{ inputs.operating_environment }}
-    SOOS_OTHER_OPTIONS: ${{ inputs.other_options }}
-    SOOS_PROJECT_NAME: ${{ inputs.project_name }}
-    SOOS_SOURCE_CODE_PATH: ${{ inputs.source_code_path }}
-    SOOS_VERBOSE: ${{ inputs.verbose }}
+  using: "composite"
+  steps:
+    - name: Check version
+      shell: bash
+      env:
+        SOOS_ACTION_REF: ${{ github.action_ref }}
+      run: |
+        set +x  # Turn off command echoing
+        printf '%.0s-' {1..80}
+        printf '\n'
+        response=$(curl -s https://api.github.com/repos/soos-io/soos-sast-github-action/releases/latest)
+        if [ $? -eq 0 ]; then
+          latest_tag=$(echo "$response" | grep -oP '"tag_name": "\K(.*)(?=")')
+          current_tag=$(echo "$SOOS_ACTION_REF" | awk -F'/' '{print $NF}')
+          latest_tag_major=$(echo "$latest_tag" | awk -F'.' '{print $1}')
+          
+          echo "Your current version is: $current_tag, The latest version is: $latest_tag_major"
+          
+          if [[ "$current_tag" != "$latest_tag_major"* ]]; then
+            echo "This action is outdated or using a commit reference. Please update to use the latest major version tag: $latest_tag_major"
+          elif [[ "$current_tag" == "$latest_tag" ]]; then
+            echo "It is recommended to use the major version tag, $latest_tag_major when referencing this action."
+          elif [[ "$current_tag" != "$latest_tag_major" ]]; then
+            echo "This action is out of date. It is recommended to use the major version tag, $latest_tag_major."
+          fi
+        else 
+          echo "Can't check version."
+        fi
+        printf '%.0s-' {1..80}
+        printf '\n'
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Set Arguments
+      shell: bash
+      run: |
+        set +x  # Turn off command echoing
+        args="--integrationName=Github --integrationType=Plugin "
+
+        [ -n "${{ inputs.api_key }}" ] && args+="--apiKey=${{ inputs.api_key }} "
+        [ -n "${{ inputs.api_url }}" ] && args+="--apiURL=${{ inputs.api_url }} "
+        [ -n "${{ inputs.branch_name }}" ] && args+="--branchName=${{ inputs.branch_name }} "
+        [ -n "${{ inputs.branch_uri }}" ] && args+="--branchURI=${{ inputs.branch_uri }} "
+        [ -n "${{ inputs.build_uri }}" ] && args+="--buildURI=${{ inputs.build_uri }} "
+        [ -n "${{ inputs.build_version }}" ] && args+="--buildVersion=${{ inputs.build_version }} "
+        [ -n "${{ inputs.client_id }}" ] && args+="--clientId=${{ inputs.client_id }} "
+        [ -n "${{ inputs.directories_to_exclude }}" ] && args+="--directoriesToExclude=\"${{ inputs.directories_to_exclude }}\" "
+        [ -n "${{ inputs.files_to_exclude }}" ] && args+="--filesToExclude=\"${{ inputs.files_to_exclude }}\" "
+        [ -n "${{ inputs.log_level }}" ] && args+="--logLevel=${{ inputs.log_level }} "
+        [ -n "${{ inputs.on_failure }}" ] && args+="--onFailure=${{ inputs.on_failure }} "
+        [ -n "${{ inputs.operating_environment }}" ] && args+="--operatingEnvironment=${{ inputs.operating_environment }} "
+        [ -n "${{ inputs.project_name }}" ] && args+="--projectName=\"${{ inputs.project_name }}\" "
+
+        [ -n "${{ inputs.source_code_path }}" ] && args+="${{ inputs.source_code_path }}"
+
+        echo "Arguments: $args"
+
+        echo "args=$args" >> $GITHUB_ENV
+
+    - name: Install and Run SOOS SCA
+      shell: bash
+      run: |
+        [ -d "./soos" ] && rm -rf "./soos"
+        npm install --prefix ./soos @soos-io/soos-sast@${{ inputs.sast_version }}
+        cd ./soos
+        SCRIPT_VERSION=$(npm list @soos-io/soos-sast --depth=0 | grep @soos-io/soos-sast | awk -F'@' '{print $NF}')
+        cd ..
+        eval "node ./soos/node_modules/@soos-io/soos-sast/bin/index.js --scriptVersion=$SCRIPT_VERSION $args"
