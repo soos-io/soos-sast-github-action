@@ -49,4 +49,4 @@ jobs:
 | on_failure             | continue_on_failure          | Set the On Failure Scan Strategy: fail_the_build, and continue_on_failure                                                    |
 | operating_environment  | ${{ runner.os }}             | System info regarding operating system, etc.                                                                                 |
 | project_name           | ${{ github.repository }}     | The project name that will be displayed on the dashboard. By Default is owner/repository_name.                               |
-| source_code_path       | GITHUB_WORKSPACE             | The path to start searching for SAST files.                                                                                  |
+| source_code_path       | ${{ github.workspace }}      | The path to start searching for SAST files.                                                                                  |

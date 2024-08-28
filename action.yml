@@ -60,7 +60,7 @@ inputs:
   source_code_path:
     description: "The path to start searching for SAST files."
     required: false
-    default: ''
+    default: '${{ github.workspace }}'
   verbose:
     description: 'DEPRECATED - parameter has no effect. Set log_level to DEBUG for the same effect.'
     required: false
