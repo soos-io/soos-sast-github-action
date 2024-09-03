@@ -120,7 +120,7 @@ runs:
         [ -n "${{ inputs.operating_environment }}" ] && args+="--operatingEnvironment=${{ inputs.operating_environment }} "
         [ -n "${{ inputs.project_name }}" ] && args+="--projectName=\"${{ inputs.project_name }}\" "
 
-        [ -n "${{ inputs.source_code_path }}" ] && args+="${{ inputs.source_code_path }}"
+        [ -n "${{ inputs.source_code_path }}" ] && args+="--sourceCodePath=${{ inputs.source_code_path }}"
 
         echo "Arguments: $args"
 
