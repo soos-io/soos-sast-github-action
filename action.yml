@@ -21,9 +21,9 @@ inputs:
     required: false
     default: '${{ github.head_ref || github.ref_name }}'
   build_uri:
-    description: 'URI to CI build info.'
+    description: 'Build URI'
     required: false
-    default: ''
+    default: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
   build_version:
     description: 'Version of application build artifacts.'
     required: false
