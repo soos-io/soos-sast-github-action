@@ -61,9 +61,6 @@ inputs:
     description: "The path to start searching for SAST files."
     required: false
     default: '${{ github.workspace }}'
-  verbose:
-    description: 'DEPRECATED - parameter has no effect. Set log_level to DEBUG for the same effect.'
-    required: false
 runs:
   using: "composite"
   steps:
@@ -94,13 +91,6 @@ runs:
           echo "Can't check version."
         fi
         printf '%.0s-' {1..80}
-        printf '\n'
-
-    - name: Check Deprecated Arguments
-      shell: bash
-      run: |
-        set +x  # Turn off command echoing
-        [ "${{ inputs.verbose }}" == "true" ] && echo "Warning: verbose is deprecated. Set log_level to DEBUG for the same effect."
         printf '\n'
 
     - uses: actions/setup-node@v4
