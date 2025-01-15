@@ -44,6 +44,8 @@ jobs:
 | build_version          | [none]                       | Version of application build artifacts.                                                                                      |
 | client_id              | [none]                       | The Client Id provided to you when subscribing to SOOS services.                                                             |
 | directories_to_exclude | [none]                       | Listing of directories or patterns to exclude from the search for SAST files. eg: **bin/start/**, **/start/**                |
+| export_format          | [none]                       | Write the scan result to this file format. Options: CsafVex, CycloneDx, Sarif, Spdx, SoosIssues, SoosLicenses, SoosPackages, SoosVulnerabilities |
+| export_file_type       | [none]                       | Write the scan result to this file type (when used with exportFormat). Options: Csv, Html, Json, Text, Xml                                       |
 | files_to_exclude       | [none]                       | Listing of files or patterns patterns to exclude from the search for SAST files. eg: **/sa**.sarif.json/, **/sast.sarif.json |
 | log_level              | 'INFO'                       | Log level to show: DEBUG, INFO, WARN, FAIL, ERROR.                                                                           |
 | on_failure             | continue_on_failure          | Set the On Failure Scan Strategy: fail_the_build, and continue_on_failure                                                    |
