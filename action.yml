@@ -55,6 +55,9 @@ inputs:
     description: 'System info regarding operating system, etc.'
     required: false
     default: ${{ runner.os }}
+  output_directory:
+    description: 'Export file destination'
+    required: false
   project_name:
     description: 'The project name that will be displayed on the dashboard. By Default is owner/repository_name.'
     required: true
@@ -126,6 +129,7 @@ runs:
         [ -n "${{ inputs.log_level }}" ] && args+="--logLevel=${{ inputs.log_level }} "
         [ -n "${{ inputs.on_failure }}" ] && args+="--onFailure=${{ inputs.on_failure }} "
         [ -n "${{ inputs.operating_environment }}" ] && args+="--operatingEnvironment=${{ inputs.operating_environment }} "
+        [ -n "${{ inputs.output_directory }}" ] && args+="--operatingEnvironment=${{ inputs.output_directory }} "
         [ -n "${{ inputs.project_name }}" ] && args+="--projectName=\"${{ inputs.project_name }}\" "
 
         [ -n "${{ inputs.source_code_path }}" ] && args+="--sourceCodePath=${{ inputs.source_code_path }}"
